@@ -1,0 +1,3 @@
+# Massification
+
+A mass emailer created with Node and Love...

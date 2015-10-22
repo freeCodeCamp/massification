@@ -1,0 +1,24 @@
+{
+  "name": "massification",
+  "version": "0.0.1",
+  "description": "An emailing service built on Amazon SES and Node",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo 'You did it!'"
+  },
+  "keywords": [
+    "email"
+  ],
+  "author": "Berkeley Martinez <Berkeley@RoboTie.com> (http://RoboTie.com)",
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "nodemailer": "^1.8.0",
+    "nodemailer-ses-transport": "^1.3.0",
+    "nodemailer-smtp-pool": "^1.1.3"
+  },
+  "devDependencies": {
+    "babel": "^5.8.23",
+    "babel-eslint": "^4.1.3",
+    "eslint": "^1.7.3"
+  }
+}
