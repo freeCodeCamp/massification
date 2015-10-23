@@ -1,4 +1,5 @@
-import { Observable, Schedular } from 'rx';
+/* eslint-disable no-process-exit */
+import { Observable } from 'rx';
 import nodemailer from 'nodemailer';
 import ses from 'nodemailer-ses-transporter';
 import dotenv from 'dotenv';
@@ -14,7 +15,7 @@ const options = {
 };
 
 const mailOptions = {
-  from: "You <you@example.com>",
+  from: 'You <team@freecodecamp.com>',
   subject: data.subject,
   text: data.text
 };
@@ -38,7 +39,7 @@ Observable.from(emails)
   .count()
   .subscribe(
     count => console.log('sent %d so far', count),
-    err => throw err,
+    err => { throw err; },
     () => {
       console.log('process complete');
       process.exit(0);
