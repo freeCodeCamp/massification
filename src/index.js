@@ -1,10 +1,10 @@
 /* eslint-disable no-process-exit */
 import { Observable } from 'rx';
 import nodemailer from 'nodemailer';
-import ses from 'nodemailer-ses-transporter';
+import ses from 'nodemailer-ses-transport';
 import dotenv from 'dotenv';
-import emails from 'emails.json';
-import data from 'data.json';
+import emails from '../emails.json';
+import data from '../data.json';
 
 dotenv.load();
 
@@ -15,13 +15,13 @@ const options = {
 };
 
 const mailOptions = {
-  from: 'You <team@freecodecamp.com>',
+  from: 'Quincy <team@freecodecamp.com>',
   subject: data.subject,
   text: data.text
 };
 
 const transporter = nodemailer.createTransport(ses(options));
-const send$ = Observable.fromNodeback(transporter.sendMail, transporter);
+const send$ = Observable.fromNodeCallback(transporter.sendMail, transporter);
 
 Observable.from(emails)
   // batch every 10000
@@ -32,7 +32,7 @@ Observable.from(emails)
     const filledOptions = Object.assign(
       {},
       mailOptions,
-      { emails: emails.join(', ').replace(/,$/, '') }
+      { to: emails.join(', ').replace(/,$/, '') }
     );
     return send$(filledOptions);
   })
