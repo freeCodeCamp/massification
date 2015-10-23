@@ -1,5 +1,7 @@
 /* eslint-disable no-process-exit */
-import { Observable } from 'rx';
+import _ from 'lodash';
+import { Observable, Scheduler } from 'rx';
+import { isEmail } from 'validator';
 import nodemailer from 'nodemailer';
 import ses from 'nodemailer-ses-transport';
 import dotenv from 'dotenv';
@@ -16,30 +18,53 @@ const options = {
 
 const mailOptions = {
   from: 'Quincy <team@freecodecamp.com>',
-  subject: data.subject,
-  text: data.text
+  subject: data.subject
 };
 
+const createText = _.template(data.text);
 const transporter = nodemailer.createTransport(ses(options));
 const send$ = Observable.fromNodeCallback(transporter.sendMail, transporter);
+const emailLength = emails.length;
+let counter = 0;
 
-Observable.from(emails)
-  // batch every 10000
-  .bufferWithCount(10000)
-  // wait 1 sec between batches
-  .delay(1000)
-  .flatMap(emails => {
+const startTime = Date.now();
+let endTime;
+let lastEmail;
+function getPercent(val) {
+  const percent = (val / emailLength) * 100;
+  return Math.round(percent * 100) / 100;
+}
+
+Observable.from(emails, null, null, Scheduler.default)
+  .filter(email => isEmail(email))
+  .flatMap(email => {
     const filledOptions = Object.assign(
       {},
       mailOptions,
-      { to: emails.join(', ').replace(/,$/, '') }
+      {
+        to: email,
+        text: createText({ email })
+      }
     );
     return send$(filledOptions);
   })
+  .doOnNext(email => {
+    lastEmail = email;
+    counter += 1;
+    console.log('%d percent done', getPercent(counter));
+  })
   .count()
+  .doOnNext(() => endTime = Date.now())
   .subscribe(
-    count => console.log('sent %d so far', count),
-    err => { throw err; },
+    count => console.log(
+      'sent %d emails in %d seconds',
+      count,
+      endTime - startTime
+    ),
+    err => {
+      console.log('err on last email %s', lastEmail);
+      throw err;
+    },
     () => {
       console.log('process complete');
       process.exit(0);
