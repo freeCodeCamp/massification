@@ -48,8 +48,8 @@ Observable.from(emails, null, null, Scheduler.default)
     );
     return send$(filledOptions);
   })
-  .doOnNext(email => {
-    lastEmail = email;
+  .doOnNext(info => {
+    lastEmail = info.envelope.to;
     counter += 1;
     console.log('%d percent done', getPercent(counter));
   })
@@ -57,7 +57,7 @@ Observable.from(emails, null, null, Scheduler.default)
   .doOnNext(() => endTime = Date.now())
   .subscribe(
     count => console.log(
-      'sent %d emails in %d seconds',
+      'sent %d emails in %d ms',
       count,
       endTime - startTime
     ),
@@ -67,6 +67,7 @@ Observable.from(emails, null, null, Scheduler.default)
     },
     () => {
       console.log('process complete');
+      console.log('last email sent to %s', lastEmail);
       process.exit(0);
     }
   );
