@@ -46,10 +46,14 @@ Observable.from(emails, null, null, Scheduler.default)
         text: createText({ email })
       }
     );
-    return send$(filledOptions);
+    return send$(filledOptions)
+      .catch(e => {
+        console.log('encountered an error sending to %s', email, e.message);
+        return Observable.just(false);
+      });
   })
   .doOnNext(info => {
-    lastEmail = info.envelope.to;
+    lastEmail = info && info.envelope ? info.envelope.to : lastEmail;
     counter += 1;
     console.log('%d percent done', getPercent(counter));
   })
