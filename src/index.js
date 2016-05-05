@@ -17,7 +17,7 @@ const options = {
 };
 
 const mailOptions = {
-  from: 'Quincy <team@freecodecamp.com>',
+  from: 'Quincy <Quincy@FreeCodeCamp.com>',
   subject: data.subject
 };
 
@@ -58,7 +58,7 @@ Observable.from(emails, null, null, Scheduler.default)
     console.log('%d percent done', getPercent(counter));
   })
   .count()
-  .doOnNext(() => endTime = Date.now())
+  .doOnNext(() => (endTime = Date.now()))
   .subscribe(
     count => console.log(
       'sent %d emails in %d ms',

@@ -5,7 +5,8 @@
   "main": "lib/index.js",
   "repository": "https://github.com/FreeCodeCamp/massification.git",
   "scripts": {
-    "test": "echo 'You did it!'"
+    "test": "echo 'You did it!'",
+    "start": "babel-node src"
   },
   "keywords": [
     "email"
