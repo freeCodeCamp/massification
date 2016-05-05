@@ -5,10 +5,17 @@ import { isEmail } from 'validator';
 import nodemailer from 'nodemailer';
 import ses from 'nodemailer-ses-transport';
 import dotenv from 'dotenv';
-import emails from '../emails.json';
 import data from '../data.json';
+import { argv } from 'yargs';
 
 dotenv.load();
+
+let emails;
+if (argv._[0] === '-p') {
+  emails = require('../test-emails.json');
+} else {
+  emails = require('../emails.json');
+}
 
 const options = {
   accessKeyId: process.env.access_key,
