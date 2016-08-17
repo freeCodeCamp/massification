@@ -17,10 +17,11 @@ if (argv._[0] === '-p') {
   emails = require('../emails.json');
 }
 
+const maxRate = 90;
 const options = {
   accessKeyId: process.env.access_key,
   secretAccessKey: process.env.priv_key,
-  rateLimit: 10000
+  rateLimit: maxRate
 };
 
 const mailOptions = {
@@ -42,8 +43,12 @@ function getPercent(val) {
   return Math.round(percent * 100) / 100;
 }
 
-Observable.from(emails, null, null, Scheduler.default)
+const email$ = Observable.from(emails, null, null, Scheduler.default)
   .filter(email => isEmail(email))
+  .controlled();
+
+let bufferCount = 0;
+email$
   .flatMap(email => {
     const filledOptions = Object.assign(
       {},
@@ -60,8 +65,13 @@ Observable.from(emails, null, null, Scheduler.default)
       });
   })
   .doOnNext(info => {
-    lastEmail = info && info.envelope ? info.envelope.to : lastEmail;
+    bufferCount += 1;
     counter += 1;
+    if (bufferCount >= maxRate) {
+      bufferCount = 0;
+      email$.request(maxRate);
+    }
+    lastEmail = info && info.envelope ? info.envelope.to : lastEmail;
     console.log('%d percent done', getPercent(counter));
   })
   .count()
@@ -82,3 +92,5 @@ Observable.from(emails, null, null, Scheduler.default)
       process.exit(0);
     }
   );
+
+email$.request(maxRate);
