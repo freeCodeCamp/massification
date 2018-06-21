@@ -14,18 +14,18 @@
   "author": "Berkeley Martinez <Berkeley@RoboTie.com> (http://RoboTie.com)",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "dotenv": "^1.2.0",
-    "lodash": "^3.10.1",
-    "nodemailer": "^1.8.0",
+    "dotenv": "^6.0.0",
+    "lodash": "^4.17.10",
+    "nodemailer": "^4.6.7",
     "nodemailer-ses-transport": "^1.3.0",
-    "nodemailer-smtp-pool": "^1.1.3",
+    "nodemailer-smtp-pool": "^2.8.3",
     "rx": "^4.0.6",
-    "validator": "^4.2.0",
-    "yargs": "^4.7.0"
+    "validator": "^10.4.0",
+    "yargs": "^11.0.0"
   },
   "devDependencies": {
-    "babel": "^5.8.23",
-    "babel-eslint": "^4.1.3",
-    "eslint": "^1.7.3"
+    "babel": "^6.23.0",
+    "babel-eslint": "^8.2.3",
+    "eslint": "^4.19.1"
   }
 }
