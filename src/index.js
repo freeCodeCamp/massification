@@ -60,7 +60,7 @@ email$
     );
     return send$(filledOptions)
       .catch(e => {
-        console.log('encountered an error sending to %s', email, e.message);
+        console.log(`encountered an error sending to ${email}, ${e.message}`);
         return Observable.just(false);
       });
   })
@@ -72,23 +72,21 @@ email$
       email$.request(maxRate);
     }
     lastEmail = info && info.envelope ? info.envelope.to : lastEmail;
-    console.log('%d percent done', getPercent(counter));
+    console.log(`${getPercent(counter)} percent done`);
   })
   .count()
   .doOnNext(() => (endTime = Date.now()))
   .subscribe(
     count => console.log(
-      'sent %d emails in %d ms',
-      count,
-      endTime - startTime
+      `sent ${count} emails in ${endTime - startTime} ms`
     ),
     err => {
-      console.log('err on last email %s', lastEmail);
+      console.log(`err on last email ${lastEmail}`);
       throw err;
     },
     () => {
       console.log('process complete');
-      console.log('last email sent to %s', lastEmail);
+      console.log(`last email sent to ${lastEmail}`);
       process.exit(0);
     }
   );
